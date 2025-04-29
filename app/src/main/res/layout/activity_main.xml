@@ -78,7 +78,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/tvTempMain"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="24dp"
@@ -93,7 +93,7 @@
                 android:layout_margin="24dp">
 
                 <ImageView
-                    android:id="@+id/imageView2"
+                    android:id="@+id/imageViewMain"
                     android:layout_width="170dp"
                     android:layout_height="170dp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -107,7 +107,7 @@
                     android:layout_marginStart="24dp"
                     android:orientation="vertical"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/imageView2"
+                    app:layout_constraintStart_toEndOf="@+id/imageViewMain"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <LinearLayout
@@ -124,6 +124,7 @@
                             android:textSize="13sp" />
 
                         <TextView
+                            android:id="@+id/tvWindSpeed"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="12 km/h"
@@ -147,6 +148,7 @@
                             android:textSize="13sp" />
 
                         <TextView
+                            android:id="@+id/tvHumidity"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="18%"
@@ -170,6 +172,7 @@
                             android:textSize="13sp" />
 
                         <TextView
+                            android:id="@+id/tvRain"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="22%"

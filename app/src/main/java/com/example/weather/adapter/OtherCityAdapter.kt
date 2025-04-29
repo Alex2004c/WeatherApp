@@ -29,8 +29,9 @@ class OtherCityAdapter (private val items: ArrayList<CityModel>):
             humidityTxt.text = "${item.humidity}%"
             tempTxt.text = "${item.temp}°"
 
+            val iconResourceName = getWeatherIcon(item.picPath)
             val drawableResourceId = holder.itemView.resources.getIdentifier (
-                item.picPath,
+                iconResourceName,
                 "drawable",
                 context.packageName
             )
@@ -41,4 +42,17 @@ class OtherCityAdapter (private val items: ArrayList<CityModel>):
     }
 
     override fun getItemCount(): Int = items.size
+
+    private fun getWeatherIcon(iconCode: String): String {
+        return when (iconCode.take(2)) {
+            "01" -> "sunny"
+            "02" -> "cloudy_2"
+            "03", "04" -> "cloudy"
+            "09", "10" -> "rainy2"
+            "11" -> "windy"
+            "13" -> "snowy"
+            "50" -> "foggy"
+            else -> "unknown"
+        }
+    }
 }

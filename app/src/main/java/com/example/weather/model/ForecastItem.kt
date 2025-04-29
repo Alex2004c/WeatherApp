@@ -2,11 +2,9 @@ package com.example.weather.model
 
 import com.google.gson.annotations.SerializedName
 
-data class WeatherResponse(
-    val name: String,
+data class ForecastItem(
+    val dt: Long,
     @SerializedName("main")
-    val main: MainData,
-    val wind: WindData,
-    val rain: RainData?,
+    val mainData: MainData,
     val weather: List<Weather>
 )

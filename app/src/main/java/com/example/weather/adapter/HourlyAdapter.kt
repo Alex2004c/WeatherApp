@@ -31,8 +31,9 @@ class HourlyAdapter(private val items: ArrayList<HourlyModel>)
             hourTxt.text = item.hour
             tempTxt.text = "${item.temp}"
 
+            val iconResourceName = getWeatherIcon(item.picPath)
             var drawableResourceId = holder.itemView.resources.getIdentifier(
-                item.picPath,
+                iconResourceName,
                 "drawable",
                 context.packageName
             )
@@ -45,13 +46,13 @@ class HourlyAdapter(private val items: ArrayList<HourlyModel>)
 
     override fun getItemCount(): Int = items.size
 
-    fun getWeatherIcon(iconCode: String): String {
+    private fun getWeatherIcon(iconCode: String): String {
         return when (iconCode.take(2)) {
             "01" -> "sunny"
-            "02" -> "few_clouds"
+            "02" -> "cloudy_2"
             "03", "04" -> "cloudy"
-            "09", "10" -> "rainy"
-            "11" -> "stormy"
+            "09", "10" -> "rainy2"
+            "11" -> "windy"
             "13" -> "snowy"
             "50" -> "foggy"
             else -> "unknown"
