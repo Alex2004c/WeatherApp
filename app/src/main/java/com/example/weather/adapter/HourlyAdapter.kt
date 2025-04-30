@@ -31,14 +31,19 @@ class HourlyAdapter(private val items: ArrayList<HourlyModel>)
             hourTxt.text = item.hour
             tempTxt.text = "${item.temp}"
 
-            val iconResourceName = getWeatherIcon(item.picPath)
+                // Свои иконки
+/*            val iconResourceName = getWeatherIcon(item.picPath)
             var drawableResourceId = holder.itemView.resources.getIdentifier(
-                iconResourceName,
-                "drawable",
+                iconUrl, "drawable",
                 context.packageName
-            )
+           )
+           Glide.with(context)
+               .load(drawableResourceId)
+               .into(pic)*/
+
+            val iconUrl = "https://openweathermap.org/img/wn/${item.picPath}@2x.png"
             Glide.with(context)
-                .load(drawableResourceId)
+                .load(iconUrl)
                 .into(pic)
 
         }

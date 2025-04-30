@@ -8,7 +8,7 @@ import com.bumptech.glide.Glide
 import com.example.weather.databinding.ViewholderCityBinding
 import com.example.weather.model.CityModel
 
-class OtherCityAdapter (private val items: ArrayList<CityModel>):
+class OtherCityAdapter (private val items: ArrayList<CityModel>, private val onItemClickListener: (CityModel) -> Unit):
     RecyclerView.Adapter<OtherCityAdapter.Viewholder>() {
 
     private lateinit var context: Context
@@ -29,7 +29,7 @@ class OtherCityAdapter (private val items: ArrayList<CityModel>):
             humidityTxt.text = "${item.humidity}%"
             tempTxt.text = "${item.temp}°"
 
-            val iconResourceName = getWeatherIcon(item.picPath)
+/*            val iconResourceName = getWeatherIcon(item.picPath)
             val drawableResourceId = holder.itemView.resources.getIdentifier (
                 iconResourceName,
                 "drawable",
@@ -37,7 +37,14 @@ class OtherCityAdapter (private val items: ArrayList<CityModel>):
             )
             Glide.with(context)
                 .load(drawableResourceId)
+                .into(pic)*/
+            val iconUrl = "https://openweathermap.org/img/wn/${item.picPath}@2x.png"
+            Glide.with(context)
+                .load(iconUrl)
                 .into(pic)
+        }
+        holder.itemView.setOnClickListener {
+            onItemClickListener(item)
         }
     }
 
