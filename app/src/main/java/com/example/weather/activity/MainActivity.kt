@@ -10,6 +10,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -19,6 +20,7 @@ import com.example.weather.R
 import com.example.weather.RetrofitClient
 import com.example.weather.adapter.HourlyAdapter
 import com.example.weather.adapter.OtherCityAdapter
+import com.example.weather.adapter.SharedViewModel
 import com.example.weather.databinding.ActivityMainBinding
 import com.example.weather.model.CityModel
 import com.example.weather.model.ForecastResponse
@@ -35,36 +37,22 @@ import java.util.Locale
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-
-    // Списки данных
-    private val hourlyList = ArrayList<HourlyModel>()
-    private val otherCityList = ArrayList<CityModel>()
-
-    // Адаптеры
-    private lateinit var hourlyAdapter: HourlyAdapter
-    private lateinit var otherCityAdapter: OtherCityAdapter
-
-    // Города
-    private var mainCity = "Minsk"
-    private val otherCities = listOf("Gomel", "Brest", "Vitebsk", "Grodno", "Bobruisk")
+    private val sharedViewModel: SharedViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.chipNavigator.setItemSelected(R.id.home, true)
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-        )
+        window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
 
-        binding.editTextText.setText(mainCity)
+        supportFragmentManager.beginTransaction()
+            .add(R.id.fragment_container, TodayFragment.newInstance("Minsk"))
+            .commit()
 
-        setupAdapters()
-        fetchCurrentCityWeather(mainCity)
-        fetchHourlyForecast(mainCity)
-        fetchOtherCitiesWeather()
+        sharedViewModel.mainCity.observe(this) { city ->
+            binding.editTextText.setText(city)
+        }
 
         binding.button.setOnClickListener {
             val cityName = binding.editTextText.text.toString().trim()
@@ -74,207 +62,23 @@ class MainActivity : AppCompatActivity() {
             inputMethodManager.hideSoftInputFromWindow(binding.editTextText.windowToken, 0)
 
             if (cityName.isNotEmpty()) {
-                fetchCurrentCityWeather(cityName)
-                fetchHourlyForecast(cityName)
+                if (cityName != sharedViewModel.mainCity.value){
+                    sharedViewModel.updateMainCity(cityName)
+                }
             } else {
-                Toast.makeText(this, "Введите название города", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "Введите название города", Toast.LENGTH_SHORT).show()
             }
         }
 
-    }
-
-    private fun setupAdapters() {
-        // Hourly — горизонтальный список
-        hourlyAdapter = HourlyAdapter(hourlyList)
-        binding.view1.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        binding.view1.adapter = hourlyAdapter
-
-        otherCityAdapter = OtherCityAdapter(otherCityList) { selectedCity ->
-            if (selectedCity.cityName != mainCity) {
-                binding.editTextText.setText(selectedCity.cityName)
-
-                fetchCurrentCityWeather(selectedCity.cityName)
-                fetchHourlyForecast(selectedCity.cityName)
-                refreshOtherCityList(selectedCity.cityName)
-            }
-        }
-        // Cities — горизонтальный список
-        binding.view2.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        binding.view2.adapter = otherCityAdapter
-    }
-
-    private fun refreshOtherCityList(newCity: String) {
-
-        val newCityIndex = otherCityList.indexOfFirst { it.cityName == newCity }
-
-        if (newCityIndex != -1) {
-            otherCityList.removeAt(newCityIndex)
-        }
-
-        fetchCityAndAddToOtherList(mainCity)
-
-        mainCity = newCity
-
-        otherCityAdapter.notifyDataSetChanged()
-    }
-
-    private fun fetchCityAndAddToOtherList(cityName: String) {
-        val apiKey = "6eef7a036bd4da72c7ead398dfb6774d"
-
-        RetrofitClient.apiService.getWeather(cityName, apiKey).enqueue(object :
-            Callback<WeatherResponse> {
-            override fun onResponse(
-                call: Call<WeatherResponse>,
-                response: Response<WeatherResponse>
-            ) {
-                if (response.isSuccessful) {
-                    val data = response.body() ?: return
-
-                    val temp = data.main.temp.toInt()
-                    val icon = data.weather.firstOrNull()?.icon ?: "01d"
-                    val wind = data.wind.speed.toInt()
-                    val humidity = data.main.humidity
-                    val rain = data.rain?.last1Hour ?: 0.0
-
-                    otherCityList.add(CityModel(cityName, temp, icon, wind, humidity, rain))
-                    otherCityAdapter.notifyDataSetChanged()
-                }
-            }
-
-            override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
-                // Обработка ошибок
-            }
-        })
-    }
-
-    fun Long.toHour(): String {
-        val date = Date(this * 1000L)
-        val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
-        return sdf.format(date)
-    }
-
-    private fun fetchHourlyForecast(cityName: String) {
-        val apiKey = "6eef7a036bd4da72c7ead398dfb6774d"
-
-        RetrofitClient.apiService.getHourlyForecast(cityName, apiKey).enqueue(object :
-            Callback<ForecastResponse> {
-            override fun onResponse(
-                call: Call<ForecastResponse>,
-                response: Response<ForecastResponse>
-            ) {
-                if (response.isSuccessful) {
-                    val forecastList = response.body()?.list ?: return
-                    Log.d("Forecast", "Received ${forecastList.size} items")
-
-                    hourlyList.clear()
-                    for (item in forecastList.take(9)) {
-                        val hour = item.dt.toHour()
-                        val temp = item.mainData.temp.toInt()
-                        val icon = item.weather.firstOrNull()?.icon ?: "01d"
-
-                        hourlyList.add(HourlyModel(hour, temp, icon))
-                    }
-
-                    hourlyAdapter.notifyDataSetChanged()
-                }
-            }
-
-            override fun onFailure(call: Call<ForecastResponse>, t: Throwable) {
-                Toast.makeText(this@MainActivity, "Ошибка загрузки прогноза", Toast.LENGTH_SHORT).show()
-            }
-        })
-    }
-
-    private fun fetchCurrentCityWeather(cityName: String) {
-        val apiKey = "6eef7a036bd4da72c7ead398dfb6774d"
-
-        RetrofitClient.apiService.getWeather(cityName, apiKey).enqueue(object :
-            Callback<WeatherResponse> {
-            override fun onResponse(
-                call: Call<WeatherResponse>,
-                response: Response<WeatherResponse>
-            ) {
-                if (response.isSuccessful) {
-                    val data = response.body() ?: return
-                    val temp = (data.main.temp).toInt()
-                    val icon = data.weather.firstOrNull()?.icon ?: "01d"
-                    val windSpeed = data.wind.speed.toInt()
-                    val humidity = data.main.humidity
-                    val rain = data.rain?.last1Hour ?: 0.0
-                    updateMainWeatherUI(icon, temp, windSpeed, humidity, rain)
-                }
-            }
-
-            override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
-                Toast.makeText(this@MainActivity, "Ошибка загрузки прогноза", Toast.LENGTH_SHORT).show()
-            }
-        })
+        /*        binding.chipNavigator.setItemSelected(R.id.home, true)
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+        )*/
     }
 
 
-    private fun updateMainWeatherUI(iconCode: String, temp: Int, wind: Int, humidity: Int, rain: Double) {
-        // Обновляем картинку
-/*        val iconResourceName = getWeatherIcon(iconCode)
-        val drawableId = resources.getIdentifier(iconResourceName, "drawable", packageName)
-        binding.imageViewMain.setImageResource(drawableId)*/
-        binding.imageViewMain.loadWeatherIcon(iconCode)
 
-        // Обновляем тексты
-        binding.tvTempMain.text = "$temp°C"
-        binding.tvWindSpeed.text = "$wind m/s"
-        binding.tvHumidity.text = "$humidity%"
-        binding.tvRain.text = "$rain mm"
-    }
-
-    private fun ImageView.loadWeatherIcon(iconCode: String) {
-        val url = "https://openweathermap.org/img/wn/$iconCode@2x.png"
-        Glide.with(this)
-            .load(url)
-            .into(this)
-    }
-
-    private fun getWeatherIcon(iconCode: String): String {
-        return when (iconCode.take(2)) {
-            "01" -> "sunny"
-            "02" -> "cloudy_2"
-            "03", "04" -> "cloudy"
-            "09", "10" -> "rainy"
-            "11" -> "windy"
-            "13" -> "snowy"
-            "50" -> "foggy"
-            else -> "unknown"
-        }
-    }
-
-    private fun fetchOtherCitiesWeather() {
-        val apiKey = "6eef7a036bd4da72c7ead398dfb6774d"
-
-        for (city in otherCities) {
-            RetrofitClient.apiService.getWeather(city, apiKey).enqueue(object :
-                Callback<WeatherResponse> {
-                override fun onResponse(
-                    call: Call<WeatherResponse>,
-                    response: Response<WeatherResponse>
-                ) {
-                    if (response.isSuccessful) {
-                        val data = response.body() ?: return
-                        val temp = (data.main.temp).toInt()
-                        val icon = data.weather.firstOrNull()?.icon ?: "01d"
-                        val windSpeed = data.wind.speed.toInt()
-                        val humidity = data.main.humidity
-                        val rain = data.rain?.last1Hour ?: 0.0
-
-                        otherCityList.add(CityModel(city, temp, icon, windSpeed, humidity, rain))
-                        otherCityAdapter.notifyDataSetChanged()
-                    }
-                }
-
-                override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
-                    Toast.makeText(this@MainActivity, "Ошибка загрузки прогноза", Toast.LENGTH_SHORT).show()
-                }
-            })
-        }
-    }
 
 
 /*    private fun initRecyclerviewOtherCity() {
@@ -287,7 +91,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.view2.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.view2.adapter = OtherCityAdapter(items)
-    }*/
+    }
 
     private fun initRecyclerviewHourly() {
         val items: ArrayList<HourlyModel> = ArrayList()
@@ -299,5 +103,5 @@ class MainActivity : AppCompatActivity() {
 
         binding.view1.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.view1.adapter = HourlyAdapter(items)
-    }
+    }*/
 }

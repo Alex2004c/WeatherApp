@@ -8,36 +8,37 @@ import com.bumptech.glide.Glide
 import com.example.weather.databinding.ViewholderCityBinding
 import com.example.weather.model.CityModel
 
-class OtherCityAdapter (private val items: ArrayList<CityModel>, private val onItemClickListener: (CityModel) -> Unit):
+class OtherCityAdapter(
+    private val context: Context,
+    private val items: ArrayList<CityModel>,
+    private val onItemClickListener: (CityModel) -> Unit
+) :
     RecyclerView.Adapter<OtherCityAdapter.Viewholder>() {
-
-    private lateinit var context: Context
 
     class Viewholder(val binding: ViewholderCityBinding) : RecyclerView.ViewHolder(binding.root)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OtherCityAdapter.Viewholder {
-        context = parent.context
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Viewholder {
         val binding = ViewholderCityBinding.inflate(LayoutInflater.from(context), parent, false)
-        return Viewholder (binding)
+        return Viewholder(binding)
     }
 
-    override fun onBindViewHolder(holder: OtherCityAdapter.Viewholder, position: Int) {
-        val item = items [position]
+    override fun onBindViewHolder(holder: Viewholder, position: Int) {
+        val item = items[position]
         holder.binding.apply {
             cityTxt.text = item.cityName
             windTxt.text = "${item.wind} Km/h"
             humidityTxt.text = "${item.humidity}%"
             tempTxt.text = "${item.temp}°"
 
-/*            val iconResourceName = getWeatherIcon(item.picPath)
-            val drawableResourceId = holder.itemView.resources.getIdentifier (
-                iconResourceName,
-                "drawable",
-                context.packageName
-            )
-            Glide.with(context)
-                .load(drawableResourceId)
-                .into(pic)*/
+            /*            val iconResourceName = getWeatherIcon(item.picPath)
+                        val drawableResourceId = holder.itemView.resources.getIdentifier (
+                            iconResourceName,
+                            "drawable",
+                            context.packageName
+                        )
+                        Glide.with(context)
+                            .load(drawableResourceId)
+                            .into(pic)*/
             val iconUrl = "https://openweathermap.org/img/wn/${item.picPath}@2x.png"
             Glide.with(context)
                 .load(iconUrl)
