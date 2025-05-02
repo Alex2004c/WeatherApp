@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.example.weather.R
 import com.example.weather.RetrofitClient
 import com.example.weather.adapter.HourlyAdapter
 import com.example.weather.adapter.OtherCityAdapter
@@ -27,7 +28,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class TodayFragment : Fragment() {
+class TodayFragment : Fragment(R.layout.fragment_today) {
 
     private var _binding: FragmentTodayBinding? = null
     private val binding get() = _binding!!
@@ -298,5 +299,9 @@ class TodayFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    fun updateCity(city: String) {
+
     }
 }

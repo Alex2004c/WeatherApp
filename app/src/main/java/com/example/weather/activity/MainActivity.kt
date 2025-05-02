@@ -21,12 +21,14 @@ import com.example.weather.RetrofitClient
 import com.example.weather.adapter.HourlyAdapter
 import com.example.weather.adapter.OtherCityAdapter
 import com.example.weather.adapter.SharedViewModel
+import com.example.weather.adapter.ViewPagerAdapter
 import com.example.weather.databinding.ActivityMainBinding
 import com.example.weather.model.CityModel
 import com.example.weather.model.ForecastResponse
 import com.example.weather.model.HourlyModel
 import com.example.weather.model.WeatherResponse
 import com.google.android.material.internal.ViewUtils.hideKeyboard
+import com.google.android.material.tabs.TabLayoutMediator
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -46,9 +48,19 @@ class MainActivity : AppCompatActivity() {
 
         window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
 
-        supportFragmentManager.beginTransaction()
-            .add(R.id.fragment_container, TodayFragment.newInstance("Minsk"))
-            .commit()
+        /*        supportFragmentManager.beginTransaction()
+                    .add(R.id.fragment_container, TodayFragment.newInstance("Minsk"))
+                    .commit()*/
+
+        binding.viewPager.adapter = ViewPagerAdapter(this)
+
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+            when (position) {
+                ViewPagerAdapter.TODAY_FRAGMENT -> tab.text = "Сегодня"
+                ViewPagerAdapter.FIVE_DAYS_FRAGMENT -> tab.text = "5 дней"
+            }
+        }.attach()
+
 
         sharedViewModel.mainCity.observe(this) { city ->
             binding.editTextText.setText(city)
@@ -58,15 +70,17 @@ class MainActivity : AppCompatActivity() {
             val cityName = binding.editTextText.text.toString().trim()
 
             binding.editTextText.clearFocus()
-            val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val inputMethodManager =
+                getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputMethodManager.hideSoftInputFromWindow(binding.editTextText.windowToken, 0)
 
             if (cityName.isNotEmpty()) {
-                if (cityName != sharedViewModel.mainCity.value){
+                if (cityName != sharedViewModel.mainCity.value) {
                     sharedViewModel.updateMainCity(cityName)
                 }
             } else {
-                Toast.makeText(this@MainActivity, "Введите название города", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "Введите название города", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
 
@@ -76,32 +90,4 @@ class MainActivity : AppCompatActivity() {
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
         )*/
     }
-
-
-
-
-
-/*    private fun initRecyclerviewOtherCity() {
-        val items: ArrayList<CityModel> = ArrayList()
-        items.add(CityModel("Paris",28,"cloudy",12,20,30.0))
-        items.add(CityModel("Berlin",29,"sunny",5,22,12.0))
-        items.add(CityModel("Rome",30,"windy",30,25,50.0))
-        items.add(CityModel("London",31,"cloudy_2",20,20,35.0))
-        items.add(CityModel("NewYork",10,"snowy",8,5,7.0))
-
-        binding.view2.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        binding.view2.adapter = OtherCityAdapter(items)
-    }
-
-    private fun initRecyclerviewHourly() {
-        val items: ArrayList<HourlyModel> = ArrayList()
-        items.add(HourlyModel("9 pm",28,"cloudy"))
-        items.add(HourlyModel("10 pm",29,"sunny"))
-        items.add(HourlyModel("11 pm",30,"windy"))
-        items.add(HourlyModel("12 pm",31,"cloudy_2"))
-        items.add(HourlyModel("1 am",10,"snowy"))
-
-        binding.view1.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        binding.view1.adapter = HourlyAdapter(items)
-    }*/
 }
