@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.example.weather.R
 import com.example.weather.RetrofitClient
@@ -60,7 +61,6 @@ class MainActivity : AppCompatActivity() {
                 ViewPagerAdapter.FIVE_DAYS_FRAGMENT -> tab.text = "5 дней"
             }
         }.attach()
-
 
         sharedViewModel.mainCity.observe(this) { city ->
             binding.editTextText.setText(city)

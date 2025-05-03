@@ -3,13 +3,17 @@ package com.example.weather.activity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AbsListView
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.example.weather.R
 import com.example.weather.RetrofitClient
@@ -60,9 +64,35 @@ class TodayFragment : Fragment(R.layout.fragment_today) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        arguments?.getString(ARG_CITY)?.let { city ->
-            sharedViewModel.updateMainCity(city)
-        }
+        val viewPager = requireActivity().findViewById<ViewPager2>(R.id.viewPager)
+
+        binding.view1.addOnItemTouchListener(object : RecyclerView.SimpleOnItemTouchListener() {
+            override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+                when (e.action) {
+                    MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
+                        viewPager.isUserInputEnabled = false
+                    }
+                    MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                        viewPager.isUserInputEnabled = true
+                    }
+                }
+                return false
+            }
+        })
+
+        binding.view2.addOnItemTouchListener(object : RecyclerView.SimpleOnItemTouchListener() {
+            override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+                when (e.action) {
+                    MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
+                        viewPager.isUserInputEnabled = false
+                    }
+                    MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                        viewPager.isUserInputEnabled = true
+                    }
+                }
+                return false
+            }
+        })
 
         sharedViewModel.mainCity.observe(viewLifecycleOwner) { newCity ->
             if (newCity != lastCity) {
@@ -80,24 +110,12 @@ class TodayFragment : Fragment(R.layout.fragment_today) {
         }
     }
 
-    companion object {
-        private const val ARG_CITY = "city_name"
-
-        fun newInstance(city: String): TodayFragment {
-            val fragment = TodayFragment()
-            val args = Bundle().apply {
-                putString(ARG_CITY, city)
-            }
-            fragment.arguments = args
-            return fragment
-        }
-    }
-
     private fun setupAdapters() {
         // Hourly — горизонтальный список
         hourlyAdapter = HourlyAdapter(hourlyList)
         binding.view1.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.view1.adapter = hourlyAdapter
+        //binding.view1.isNestedScrollingEnabled = false
 
         otherCityAdapter = OtherCityAdapter(requireContext(), otherCityList) { selectedCity ->
             if (selectedCity.cityName != sharedViewModel.mainCity.value) {
@@ -107,6 +125,7 @@ class TodayFragment : Fragment(R.layout.fragment_today) {
         // Cities — горизонтальный список
         binding.view2.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.view2.adapter = otherCityAdapter
+        //binding.view2.isNestedScrollingEnabled = false
     }
 
     private fun refreshOtherCityList() {
