@@ -2,15 +2,13 @@ package com.example.weather.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.weather.databinding.ViewholderHourlyBinding
 import com.example.weather.model.HourlyModel
 
-class HourlyAdapter(private val items: ArrayList<HourlyModel>)
+class HourlyAdapter(private val items: List<HourlyModel>)
     : RecyclerView.Adapter<HourlyAdapter.Viewholder>() {
 
     private lateinit var context: Context
