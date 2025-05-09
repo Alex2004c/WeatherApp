@@ -61,7 +61,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Wind Speed"
+                        android:text="Скорость ветра"
                         android:textColor="@color/white"
                         android:textSize="13sp" />
 
@@ -69,7 +69,7 @@
                         android:id="@+id/tvWindSpeed"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        tools:text="12 km/h"
+                        tools:text="12 м/с"
                         android:textColor="@color/white"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -85,7 +85,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Humidity"
+                        android:text="Влажность"
                         android:textColor="@color/white"
                         android:textSize="13sp" />
 
@@ -109,7 +109,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Rain"
+                        android:text="Вероятность осадков"
                         android:textColor="@color/white"
                         android:textSize="13sp" />
 
@@ -132,7 +132,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:text="Today"
+            android:text="Сегодня"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -159,7 +159,7 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="16sp"
                 android:layout_weight="1"
-                android:text="Other city"
+                android:text="Другие города"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -170,7 +170,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16sp"
                 android:layout_marginEnd="24dp"
-                android:text="View all"
+                tools:text="Посмотреть все"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
         </LinearLayout>

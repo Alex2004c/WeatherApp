@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,7 +20,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.example.weather.R
 import com.example.weather.RetrofitClient
-import com.example.weather.adapter.HourlyAdapter
+import com.example.weather.adapter.ThreeHourAdapter
 import com.example.weather.adapter.OtherCityAdapter
 import com.example.weather.adapter.SharedViewModel
 import com.example.weather.adapter.ViewPagerAdapter
@@ -48,10 +49,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-
-        /*        supportFragmentManager.beginTransaction()
-                    .add(R.id.fragment_container, TodayFragment.newInstance("Minsk"))
-                    .commit()*/
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+        )
 
         binding.viewPager.adapter = ViewPagerAdapter(this)
 
@@ -66,13 +67,19 @@ class MainActivity : AppCompatActivity() {
             binding.editTextText.setText(city)
         }
 
+        binding.editTextText.setOnClickListener {
+            binding.editTextText.setCursorVisible(true)
+        }
+
         binding.button.setOnClickListener {
             val cityName = binding.editTextText.text.toString().trim()
 
             binding.editTextText.clearFocus()
-            val inputMethodManager =
-                getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            inputMethodManager.hideSoftInputFromWindow(binding.editTextText.windowToken, 0)
+            binding.editTextText.setCursorVisible(false)
+
+            // Скрываем клавиатуру
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(binding.editTextText.windowToken, 0)
 
             if (cityName.isNotEmpty()) {
                 if (cityName != sharedViewModel.mainCity.value) {
@@ -83,6 +90,10 @@ class MainActivity : AppCompatActivity() {
                     .show()
             }
         }
+/*
+        binding.editTextText.setCursorVisible(false)
+*/
+
 
         /*        binding.chipNavigator.setItemSelected(R.id.home, true)
         window.setFlags(

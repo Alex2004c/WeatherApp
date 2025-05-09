@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginBottom="8dp"
     android:elevation="4dp"
     android:id="@+id/cardView">
@@ -11,9 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:id="@+id/root"
         android:padding="16dp"
-        android:background="#ffffff">
+        android:background="@drawable/light_green_bg">
 
         <!-- Краткая информация -->
         <LinearLayout
@@ -21,87 +20,206 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/dayText"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:textColor="@color/black"
-                android:text="Понедельник, 29 Апреля"/>
-
-            <TextView
-                android:id="@+id/tempText"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="12°C - 18°C"
-                android:textColor="@color/black"
-                android:textStyle="bold"/>
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/dayText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:textColor="@color/white"
+                    android:text="Понедельник, 29 Апреля"/>
+
+                <TextView
+                    android:id="@+id/dayStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Облачно"
+                    android:textColor="@color/white" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="end">
+
+                <ImageView
+                    android:id="@+id/iconView"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginRight="20dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tempMax"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:textColor="@color/white"
+                        android:text="10°"/>
+
+                    <TextView
+                        android:id="@+id/tempMin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:textSize="16sp"
+                        android:text="0°"
+                        android:textColor="@color/white"/>
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/iconView"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="8dp"/>
-
-        <!-- Детальная информация (по умолчанию скрыта) -->
+        <!-- Детальная информация (по умолчанию скрыта) android:visibility="gone" -->
         <LinearLayout
             android:id="@+id/detailContainer"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:visibility="gone"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="16dp">
 
-            <TextView
-                android:id="@+id/tvWind"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Ветер: 4 м/с"
-                android:textColor="@color/black"
-                android:textSize="14sp" />
+                android:orientation="vertical"
+                android:layout_marginStart="90dp">
 
-            <TextView
-                android:id="@+id/tvHumidity"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Влажность: 60%"
-                android:textColor="@color/black"
-                android:textSize="14sp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tvUV"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="УФ индекс: 3"
-                android:textColor="@color/black"
-                android:textSize="14sp" />
+                        <TextView
+                            android:id="@+id/tvWindText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Ветер:"
+                            android:layout_marginEnd="50dp"
+                            android:textColor="@color/white"
+                            android:textSize="14sp" />
 
-            <TextView
-                android:id="@+id/tvSunrise"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Восход: 05:30"
-                android:textColor="@color/black"
-                android:textSize="14sp" />
+                        <TextView
+                            android:id="@+id/tvWindValue"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="4 м/с"
+                            android:layout_weight="1"
+                            android:textColor="@color/white"
+                            android:textSize="14sp" />
 
-            <TextView
-                android:id="@+id/tvSunset"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Заход: 20:30"
-                android:textColor="@color/black"
-                android:textSize="14sp" />
+                    </LinearLayout>
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvHumidityText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Влажность:"
+                        android:layout_weight="1"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tvHumidityValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="60%"
+                        android:layout_weight="1"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/tvUVText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="УФ индекс:"
+                            android:layout_weight="1"
+                            android:textColor="@color/white"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/tvUVValue"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="3"
+                            android:layout_weight="1"
+                            android:textColor="@color/white"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/tvSunriseText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Восход"
+                            android:layout_weight="1"
+                            android:textColor="@color/white"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/tvSunriseValue"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="05:30"
+                            android:layout_weight="1"
+                            android:textColor="@color/white"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/tvSunsetText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Заход"
+                            android:layout_weight="1"
+                            android:textColor="@color/white"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/tvSunsetValue"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="20:30"
+                            android:layout_weight="1"
+                            android:textColor="@color/white"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+            </LinearLayout>
             <!-- По часам -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/hourlyRecyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="wrap_content"
                 android:clipToPadding="false"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp" />
+                android:nestedScrollingEnabled="false"/>
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

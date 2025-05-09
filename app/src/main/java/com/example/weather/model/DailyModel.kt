@@ -6,11 +6,6 @@ data class DailyModel(
     val tempMax: Int,
     val icon: String,
     val weatherDesc: String,
-    val hourlyList: List<HourlyModel>,
-    val windSpeed: Double,
-    val humidity: Int,
-    val uvi: Int,
-    val sunrise: Long,
-    val sunset: Long,
+    val hourlyList: List<ForecastItem>,
     var isExpanded: Boolean = false
 )

@@ -20,11 +20,4 @@ interface WeatherApiService {
         @Query("appid") apiKey: String,
         @Query("units") units: String = "metric"
     ): Call<ForecastResponse>
-
-    @GET("forecast")
-    fun getFiveDaysForecast(
-        @Query("q") city: String,
-        @Query("appid") apiKey: String,
-        @Query("units") units: String = "metric"
-    ): Call<ForecastResponse>
 }

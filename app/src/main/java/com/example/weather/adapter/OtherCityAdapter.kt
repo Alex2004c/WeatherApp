@@ -26,7 +26,7 @@ class OtherCityAdapter(
         val item = items[position]
         holder.binding.apply {
             cityTxt.text = item.cityName
-            windTxt.text = "${item.wind} Km/h"
+            windTxt.text = "${item.wind} м/с"
             humidityTxt.text = "${item.humidity}%"
             tempTxt.text = "${item.temp}°"
 

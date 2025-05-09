@@ -15,7 +15,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.example.weather.R
 import com.example.weather.RetrofitClient
-import com.example.weather.adapter.HourlyAdapter
+import com.example.weather.adapter.ThreeHourAdapter
 import com.example.weather.adapter.OtherCityAdapter
 import com.example.weather.adapter.SharedViewModel
 import com.example.weather.databinding.FragmentTodayBinding
@@ -36,18 +36,18 @@ class TodayFragment : Fragment(R.layout.fragment_today) {
     private val binding get() = _binding!!
     private val sharedViewModel: SharedViewModel by activityViewModels()
 
-    private var lastCity: String? = "Minsk"
+    private var lastCity: String? = "Минск"
 
     // Списки данных
     private val hourlyList = ArrayList<HourlyModel>()
     private val otherCityList = ArrayList<CityModel>()
 
     // Адаптеры
-    private lateinit var hourlyAdapter: HourlyAdapter
+    private lateinit var hourlyAdapter: ThreeHourAdapter
     private lateinit var otherCityAdapter: OtherCityAdapter
 
     // Города
-    private val otherCities = listOf("Gomel", "Brest", "Vitebsk", "Grodno", "Bobruisk")
+    private val otherCities = listOf("Гомель", "Брест", "Витебск", "Гродно", "Бобруйск")
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -110,7 +110,7 @@ class TodayFragment : Fragment(R.layout.fragment_today) {
 
     private fun setupAdapters() {
         // Hourly — горизонтальный список
-        hourlyAdapter = HourlyAdapter(hourlyList)
+        hourlyAdapter = ThreeHourAdapter(hourlyList)
         binding.view1.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.view1.adapter = hourlyAdapter
         //binding.view1.isNestedScrollingEnabled = false
@@ -258,9 +258,9 @@ class TodayFragment : Fragment(R.layout.fragment_today) {
 
         // Обновляем тексты
         binding.tvTempMain.text = "$temp°C"
-        binding.tvWindSpeed.text = "$wind m/s"
+        binding.tvWindSpeed.text = "$wind м/с"
         binding.tvHumidity.text = "$humidity%"
-        binding.tvRain.text = "$rain mm"
+        binding.tvRain.text = "$rain мм"
     }
 
     private fun ImageView.loadWeatherIcon(iconCode: String) {

@@ -5,50 +5,48 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.weather.databinding.ViewholderHourlyBinding
-import com.example.weather.model.HourlyModel
+import com.example.weather.databinding.ItemHourlyBinding
+import com.example.weather.model.ForecastItem
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
-class HourlyAdapter(private val items: List<HourlyModel>)
+class HourlyAdapter(private val items: List<ForecastItem>)
     : RecyclerView.Adapter<HourlyAdapter.Viewholder>() {
 
     private lateinit var context: Context
 
-    class Viewholder(val binding: ViewholderHourlyBinding)
-        : RecyclerView.ViewHolder(binding.root)
+    class Viewholder(val binding: ItemHourlyBinding) : RecyclerView.ViewHolder(binding.root)
 
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HourlyAdapter.Viewholder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Viewholder {
         context = parent.context
-        val binding = ViewholderHourlyBinding.inflate(LayoutInflater.from(context), parent, false)
+        val binding = ItemHourlyBinding.inflate(LayoutInflater.from(context), parent, false)
         return Viewholder(binding)
     }
 
-    override fun onBindViewHolder(holder: HourlyAdapter.Viewholder, position: Int) {
+    override fun onBindViewHolder(holder: Viewholder, position: Int) {
         val item = items[position]
+
         holder.binding.apply {
             hourTxt.text = item.hour
-            tempTxt.text = "${item.temp}"
+            tempTxt.text = "${item.mainData.temp.toInt()}°C"
 
-                // Свои иконки
-/*            val iconResourceName = getWeatherIcon(item.picPath)
-            var drawableResourceId = holder.itemView.resources.getIdentifier(
-                iconUrl, "drawable",
-                context.packageName
-           )
-           Glide.with(context)
-               .load(drawableResourceId)
-               .into(pic)*/
-
-            val iconUrl = "https://openweathermap.org/img/wn/${item.picPath}@2x.png"
-            Glide.with(context)
-                .load(iconUrl)
-                .into(pic)
+            val iconUrl = "https://openweathermap.org/img/wn/${item.weather.firstOrNull()?.icon}@2x.png"
+            Glide.with(context).load(iconUrl).into(pic)
 
         }
     }
 
+
     override fun getItemCount(): Int = items.size
 
+    val ForecastItem.hour: String
+        get() {
+            val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
+            return sdf.format(Date(dt * 1000L)) // dt в секундах → переводим в миллисекунды
+        }
+
+    // Метод для иконок можно оставить как есть
     private fun getWeatherIcon(iconCode: String): String {
         return when (iconCode.take(2)) {
             "01" -> "sunny"

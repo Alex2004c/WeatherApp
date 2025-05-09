@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 
 class SharedViewModel : ViewModel() {
     // MutableLiveData для изменения внутри фрагментов
-    private val _mainCity = MutableLiveData<String>("Minsk")
+    private val _mainCity = MutableLiveData<String>("Минск")
     val mainCity: LiveData<String> get() = _mainCity
 
     fun updateMainCity(newCity: String) {
