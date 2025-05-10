@@ -15,6 +15,15 @@
         tools:background="@drawable/bg">
 
         <TextView
+            android:id="@+id/tvCity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Минск"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
             android:id="@+id/tvTempMain"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,6 +34,48 @@
             tools:text="25°C"
             android:textColor="@color/white"
             android:textSize="70sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ощущается как"
+                android:textColor="@color/white"
+                android:textSize="13sp" />
+
+
+            <TextView
+                android:id="@+id/tvFeeling"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="0°C"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvCondition"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Облачно"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvLastUpdated"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="2025-05-10 13:03"
+            android:textColor="@color/white"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -42,10 +93,10 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/sunny" />
-
+            <!-- android:layout_height="0" --><!----><!----><!----><!----><!----><!---->
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -55,7 +106,7 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:layout_weight="0.33"
+                    android:layout_weight="0.1"
                     android:orientation="vertical">
 
                     <TextView
@@ -79,7 +130,7 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:layout_weight="0.33"
+                    android:layout_weight="0.1"
                     android:orientation="vertical">
 
                     <TextView
@@ -103,13 +154,13 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:layout_weight="0.33"
+                    android:layout_weight="0.1"
                     android:orientation="vertical">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Вероятность осадков"
+                        android:text="Осадки"
                         android:textColor="@color/white"
                         android:textSize="13sp" />
 
@@ -117,7 +168,82 @@
                         android:id="@+id/tvRain"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        tools:text="22%"
+                        tools:text="0 мм"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Порывы до"
+                        android:textColor="@color/white"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/tvGust"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:text="0 км/ч"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Давление"
+                        android:textColor="@color/white"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/tvPressure"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:text="0 мбар"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="УФ-индекс"
+                        android:textColor="@color/white"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/tvUV"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:text="0"
                         android:textColor="@color/white"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -182,6 +308,7 @@
             android:clipToPadding="false"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
+            android:layout_marginBottom="24dp"
             android:nestedScrollingEnabled="false"/>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

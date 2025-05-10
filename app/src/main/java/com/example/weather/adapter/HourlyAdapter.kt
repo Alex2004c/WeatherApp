@@ -6,12 +6,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.weather.databinding.ItemHourlyBinding
-import com.example.weather.model.ForecastItem
+import com.example.weather.model.weatherApi.Hourly
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 
-class HourlyAdapter(private val items: List<ForecastItem>)
+class HourlyAdapter(private val items: List<Hourly>)
     : RecyclerView.Adapter<HourlyAdapter.Viewholder>() {
 
     private lateinit var context: Context
@@ -28,25 +30,17 @@ class HourlyAdapter(private val items: List<ForecastItem>)
         val item = items[position]
 
         holder.binding.apply {
-            hourTxt.text = item.hour
-            tempTxt.text = "${item.mainData.temp.toInt()}°C"
+            hourTxt.text = item.time.extractTime()
+            tempTxt.text = "${item.temp_c.toInt()}°C"
 
-            val iconUrl = "https://openweathermap.org/img/wn/${item.weather.firstOrNull()?.icon}@2x.png"
+            val iconUrl = "https:${item.condition.icon}"
             Glide.with(context).load(iconUrl).into(pic)
 
         }
     }
 
-
     override fun getItemCount(): Int = items.size
 
-    val ForecastItem.hour: String
-        get() {
-            val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
-            return sdf.format(Date(dt * 1000L)) // dt в секундах → переводим в миллисекунды
-        }
-
-    // Метод для иконок можно оставить как есть
     private fun getWeatherIcon(iconCode: String): String {
         return when (iconCode.take(2)) {
             "01" -> "sunny"
@@ -57,6 +51,18 @@ class HourlyAdapter(private val items: List<ForecastItem>)
             "13" -> "snowy"
             "50" -> "foggy"
             else -> "unknown"
+        }
+    }
+
+    private fun String.extractTime(): String {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+
+        return try {
+            val date = inputFormat.parse(this) ?: return this
+            outputFormat.format(date)
+        } catch (e: ParseException) {
+            this
         }
     }
 }

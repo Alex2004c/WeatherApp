@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.weather.databinding.ViewholderCityBinding
-import com.example.weather.model.CityModel
+import com.example.weather.model.weatherApi.CityModel
 
 class OtherCityAdapter(
     private val context: Context,
@@ -25,10 +25,11 @@ class OtherCityAdapter(
     override fun onBindViewHolder(holder: Viewholder, position: Int) {
         val item = items[position]
         holder.binding.apply {
-            cityTxt.text = item.cityName
-            windTxt.text = "${item.wind} м/с"
+            cityTxt.text = item.name
+            windTxt.text = "${item.windKph.toInt()} км/ч"
             humidityTxt.text = "${item.humidity}%"
             tempTxt.text = "${item.temp}°"
+            rainTxt.text = "${item.rainMm} мм"
 
             /*            val iconResourceName = getWeatherIcon(item.picPath)
                         val drawableResourceId = holder.itemView.resources.getIdentifier (
@@ -39,7 +40,7 @@ class OtherCityAdapter(
                         Glide.with(context)
                             .load(drawableResourceId)
                             .into(pic)*/
-            val iconUrl = "https://openweathermap.org/img/wn/${item.picPath}@2x.png"
+            val iconUrl = "https:${item.icon}"
             Glide.with(context)
                 .load(iconUrl)
                 .into(pic)

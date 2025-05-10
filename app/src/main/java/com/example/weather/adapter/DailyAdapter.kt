@@ -12,14 +12,14 @@ import com.bumptech.glide.Glide
 import com.example.weather.R
 import com.example.weather.activity.MainActivity
 import com.example.weather.databinding.ItemDailyBinding
-import com.example.weather.model.DailyModel
+import com.example.weather.model.weatherApi.DailyModel
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class DailyAdapter(
     private val items: MutableList<DailyModel>
-
-/*
-    private val onItemClickListener: (Int) -> Unit
-*/
 ) : RecyclerView.Adapter<DailyAdapter.ViewHolder>() {
 
     private lateinit var context: Context
@@ -36,21 +36,40 @@ class DailyAdapter(
         return ViewHolder(binding)
     }
 
+    private fun String.to24HourFormat(): String {
+        val inputFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+
+        return try {
+            val date = inputFormat.parse(this) ?: return this
+            outputFormat.format(date)
+        } catch (e: Exception) {
+            this // если не получилось — возвращаем исходную строку
+        }
+    }
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
 
         holder.binding.apply {
-            dayText.text = item.date
+            dayText.text = if (item.date.isToday()) {
+                "Сегодня"
+            } else {
+                item.date.toFormattedDate()
+            }
             dayStatus.text = item.weatherDesc
             tempMax.text = "${item.tempMax}°C"
             tempMin.text = "${item.tempMin}°C"
+            tvRainValue.text = "${item.rainChance}%"
+            tvHumidityValue.text = "${item.humidity}%"
+            tvUVValue.text = "${item.uv}"
+            tvSunriseValue.text = item.sunrise.to24HourFormat()
+            tvSunsetValue.text = item.sunset.to24HourFormat()
             detailContainer.visibility = if (item.isExpanded) View.VISIBLE else View.GONE
 
-            // Загружаем иконку погоды
-            val iconUrl = "https://openweathermap.org/img/w/${item.icon}.png"
+            val iconUrl = "https:${item.icon}"
             Glide.with(context).load(iconUrl).into(iconView)
 
-            // По часам
             hourlyRecyclerView.layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             hourlyRecyclerView.adapter = HourlyAdapter(item.hourlyList)
@@ -69,7 +88,6 @@ class DailyAdapter(
                 }
             })
 
-            // Клик по карточке дня
             cardView.setOnClickListener {
                 item.isExpanded = !item.isExpanded
                 notifyItemChanged(position)
@@ -79,9 +97,33 @@ class DailyAdapter(
 
     override fun getItemCount(): Int = items.size
 
-    // Переключение состояния
-/*    fun toggleExpand(position: Int) {
-        items[position] = items[position].copy(isExpanded = !items[position].isExpanded)
-        notifyItemChanged(position)
-    }*/
+    private fun String.toFormattedDate(): String {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("EEEE, dd MMMM", Locale.getDefault())
+
+        return try {
+            val date = inputFormat.parse(this) ?: return this
+            outputFormat.format(date)
+        } catch (e: ParseException) {
+            this
+        }
+    }
+
+    private fun String.isToday(): Boolean {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val today = Calendar.getInstance().time
+        val itemDate = inputFormat.parse(this) ?: return false
+
+        val calendarItem = Calendar.getInstance().apply {
+            time = itemDate
+        }
+
+        val calendarToday = Calendar.getInstance().apply {
+            time = today
+        }
+
+        return calendarItem.get(Calendar.DAY_OF_YEAR) == calendarToday.get(Calendar.DAY_OF_YEAR) &&
+                calendarItem.get(Calendar.YEAR) == calendarToday.get(Calendar.YEAR)
+    }
+
 }
