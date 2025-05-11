@@ -74,7 +74,7 @@ class TenDaysFragment : Fragment(R.layout.fragment_ten_days) {
                             icon = day.day.condition.icon,
                             weatherDesc = day.day.condition.text,
                             sunrise = day.astro.sunrise,
-                            sunset = day.astro.sunrise,
+                            sunset = day.astro.sunset,
                             humidity = day.day.avghumidity,
                             uv = day.day.uv,
                             rainChance = day.day.daily_chance_of_rain,

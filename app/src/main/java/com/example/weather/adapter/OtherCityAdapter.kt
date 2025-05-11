@@ -29,7 +29,7 @@ class OtherCityAdapter(
             windTxt.text = "${item.windKph.toInt()} км/ч"
             humidityTxt.text = "${item.humidity}%"
             tempTxt.text = "${item.temp}°"
-            rainTxt.text = "${item.rainMm} мм"
+            rainTxt.text = "${item.rainMm}"
 
             /*            val iconResourceName = getWeatherIcon(item.picPath)
                         val drawableResourceId = holder.itemView.resources.getIdentifier (

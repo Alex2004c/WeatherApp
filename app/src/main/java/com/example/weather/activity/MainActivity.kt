@@ -33,7 +33,8 @@ class MainActivity : AppCompatActivity() {
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             when (position) {
                 ViewPagerAdapter.TODAY_FRAGMENT -> tab.text = "Сегодня"
-                ViewPagerAdapter.FIVE_DAYS_FRAGMENT -> tab.text = "10 дней"
+                ViewPagerAdapter.TOMORROW_FRAGMENT -> tab.text = "Завтра"
+                ViewPagerAdapter.TEN_DAYS_FRAGMENT -> tab.text = "10 дней"
             }
         }.attach()
 

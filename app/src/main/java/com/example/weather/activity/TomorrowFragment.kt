@@ -14,10 +14,12 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.example.weather.R
-import com.example.weather.adapter.ThreeHourAdapter
+import com.example.weather.adapter.HourlyAdapter
 import com.example.weather.adapter.OtherCityAdapter
 import com.example.weather.adapter.SharedViewModel
+import com.example.weather.adapter.ThreeHourAdapter
 import com.example.weather.databinding.FragmentTodayBinding
+import com.example.weather.databinding.FragmentTomorrowBinding
 import com.example.weather.model.weatherApi.CityModel
 import com.example.weather.model.weatherApi.ForecastResponse
 import com.example.weather.model.weatherApi.Hourly
@@ -25,13 +27,12 @@ import com.example.weather.model.weatherApi.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class TodayFragment : Fragment(R.layout.fragment_today) {
+class TomorrowFragment : Fragment(R.layout.fragment_tomorrow) {
 
-    private var _binding: FragmentTodayBinding? = null
+    private var _binding: FragmentTomorrowBinding? = null
     private val binding get() = _binding!!
     private val sharedViewModel: SharedViewModel by activityViewModels()
 
@@ -50,7 +51,7 @@ class TodayFragment : Fragment(R.layout.fragment_today) {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentTodayBinding.inflate(inflater, container, false)
+        _binding = FragmentTomorrowBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -90,7 +91,7 @@ class TodayFragment : Fragment(R.layout.fragment_today) {
 
         sharedViewModel.mainCity.observe(viewLifecycleOwner) { newCity ->
             if (newCity != lastCity) {
-                fetchCurrentCityWeather(newCity) {
+                fetchTomorrowCityWeather(newCity) {
                     fetchHourlyForecast(newCity)
                     refreshOtherCityList()
                 }
@@ -98,7 +99,7 @@ class TodayFragment : Fragment(R.layout.fragment_today) {
         }
 
         setupAdapters()
-        fetchCurrentCityWeather(sharedViewModel.mainCity.value) {
+        fetchTomorrowCityWeather(sharedViewModel.mainCity.value) {
             fetchHourlyForecast(sharedViewModel.mainCity.value)
             fetchOtherCitiesWeather()
         }
@@ -143,33 +144,38 @@ class TodayFragment : Fragment(R.layout.fragment_today) {
         val apiKey = "0f82c0cff9e84ddcb1c92155251005"
 
         if (cityName.isNullOrEmpty()) return
-        RetrofitClient.apiService.getCurrentWeather(cityName, apiKey).enqueue(object :
+        RetrofitClient.apiService.getTwoDaysForecast(cityName, apiKey).enqueue(object :
             Callback<ForecastResponse> {
             override fun onResponse(
                 call: Call<ForecastResponse>,
                 response: Response<ForecastResponse>
             ) {
                 if (response.isSuccessful && response.body() != null) {
-                    val data = response.body()!!
 
-                    val temp = data.current.temp_c.toInt()
-                    val icon = data.current.condition.icon
-                    val windKph = data.current.wind_kph
-                    val humidity = data.current.humidity
-                    val rainMm = "${data.current.precip_mm}" + " мм"
+                    val forecastData = response.body()!!.forecast
+                    val tomorrowDay = forecastData.forecastday.getOrNull(1)
 
-                    if (!otherCityList.any { it.name == cityName }) {
-                        otherCityList.add(0, CityModel(
-                            name = cityName,
-                            temp = temp,
-                            icon = icon,
-                            windKph = windKph,
-                            humidity = humidity,
-                            rainMm = rainMm
-                        ))
+                    if (tomorrowDay != null) {
+                        val temp = tomorrowDay.day.maxtemp_c.toInt()
+                        val icon = tomorrowDay.day.condition.icon
+                        val windKph = tomorrowDay.day.maxwind_kph
+                        val humidity = tomorrowDay.day.avghumidity
+                        val rainChance = "${tomorrowDay.day.daily_chance_of_rain}" + "%"
+
+                        if (!otherCityList.any { it.name == cityName }) {
+                            otherCityList.add(0, CityModel(
+                                name = cityName,
+                                temp = temp,
+                                icon = icon,
+                                windKph = windKph,
+                                humidity = humidity,
+                                rainMm = rainChance
+                            )
+                            )
+                        }
+                        otherCityAdapter.notifyItemInserted(0)
+                        onSuccess()
                     }
-                    otherCityAdapter.notifyItemInserted(0)
-                    onSuccess()
                 }
             }
 
@@ -185,87 +191,58 @@ class TodayFragment : Fragment(R.layout.fragment_today) {
         if (cityName.isNullOrBlank()) return
 
         RetrofitClient.apiService.getTwoDaysForecast(cityName, apiKey).enqueue(object :
-                Callback<ForecastResponse> {
-                override fun onResponse(
-                    call: Call<ForecastResponse>,
-                    response: Response<ForecastResponse>
-                ) {
-                    if (response.isSuccessful && response.body() != null) {
-
-                        val allDays = response.body()!!.forecast.forecastday
-
-                        val allHours = allDays.flatMap { it.hour }
-
-                        val now = System.currentTimeMillis() / 1000L
-                        val next24hours = now + 24 * 3600L
-
-                        val filtered = allHours.filter {
-                            it.time.toUnixTimestamp() in now..next24hours
-                        }.sortedBy { it.time.toUnixTimestamp() }
-
-                        hourlyList.clear()
-                        hourlyList.addAll(filtered)
-                        hourlyAdapter.notifyDataSetChanged()
-                    }
-                }
-
-                override fun onFailure(call: Call<ForecastResponse>, t: Throwable) {
-                    Toast.makeText(context, "Ошибка загрузки по 3ч прогноза", Toast.LENGTH_SHORT).show()
-                }
-            })
-    }
-
-    fun String.toUnixTimestamp(): Long {
-        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
-        val date = sdf.parse(this) ?: return 0L
-        return date.time / 1000L
-    }
-
-    private fun fetchCurrentCityWeather(cityName: String?, onSuccessCallback: () -> Unit) {
-        val apiKey = "0f82c0cff9e84ddcb1c92155251005"
-
-        if (cityName.isNullOrEmpty()) return
-
-        RetrofitClient.apiService.getCurrentWeather(cityName, apiKey).enqueue(object :
             Callback<ForecastResponse> {
             override fun onResponse(
                 call: Call<ForecastResponse>,
                 response: Response<ForecastResponse>
             ) {
                 if (response.isSuccessful && response.body() != null) {
-                    val data = response.body()!!.current
-                    val location = response.body()!!.location
 
-                    val cityN = location.name
-                    binding.tvCity.text = cityN
+                    val tomorrowDay = response.body()!!.forecast.forecastday.getOrNull(1)
+                    if (tomorrowDay != null) {
+                        hourlyList.clear()
+                        hourlyList.addAll(tomorrowDay.hour)
+                        hourlyAdapter.notifyDataSetChanged()
+                    } else {
+                        Toast.makeText(context, "Нет данных на завтра", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
 
-                    val temp = data.temp_c.toInt()
-                    val feelsLike = data.feelslike_c
+            override fun onFailure(call: Call<ForecastResponse>, t: Throwable) {
+                Toast.makeText(context, "Ошибка загрузки почасового прогноза на завтра", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
 
-                    val condition = data.condition.text
+    private fun fetchTomorrowCityWeather(cityName: String?, onSuccessCallback: () -> Unit) {
+        val apiKey = "0f82c0cff9e84ddcb1c92155251005"
+
+        if (cityName.isNullOrEmpty()) return
+
+        RetrofitClient.apiService.getTwoDaysForecast(cityName, apiKey).enqueue(object :
+            Callback<ForecastResponse> {
+            override fun onResponse(
+                call: Call<ForecastResponse>,
+                response: Response<ForecastResponse>
+            ) {
+                if (response.isSuccessful && response.body() != null) {
+                    val forecastDays = response.body()!!.forecast.forecastday
+                    val tomorrowDay = forecastDays.getOrNull(1) ?: return
+
+                    val condition = tomorrowDay.day.condition.text
                     binding.tvCondition.text = condition
-                    val lastUpdated = data.last_updated
-                    binding.tvLastUpdated.text = lastUpdated.toFormattedDate()
-
-                    val windKph = data.wind_kph
-                    val humidity = data.humidity
-                    val rain = data.precip_mm
-                    val gustKph = data.gust_kph
-                    val pressureMb = data.pressure_mb
-                    val uv = data.uv
-
-                    val icon = data.condition.icon
+                    val date = tomorrowDay.date
+                    binding.tvDate.text = date.toFormattedDate()
 
                     updateMainWeatherUI(
-                        iconCode = icon,
-                        temp = temp,
-                        feelsLike = feelsLike,
-                        windKph = windKph,
-                        gustKph = gustKph,
-                        humidity = humidity,
-                        pressureMb = pressureMb,
-                        precipMm = rain,
-                        uv = uv
+                        iconCode = tomorrowDay.day.condition.icon,
+                        windKph = tomorrowDay.day.maxwind_kph,
+                        sunrise = tomorrowDay.astro.sunrise,
+                        humidity = tomorrowDay.day.avghumidity,
+                        sunset = tomorrowDay.astro.sunset,
+                        precipChance = tomorrowDay.day.daily_chance_of_rain,
+                        uv = tomorrowDay.day.uv
                     )
                     onSuccessCallback()
                 } else {
@@ -277,12 +254,23 @@ class TodayFragment : Fragment(R.layout.fragment_today) {
                 Toast.makeText(context, "Ошибка загрузки главной погоды", Toast.LENGTH_SHORT).show()
             }
         })
+    }
 
+    private fun String.to24HourFormat(): String {
+        val inputFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+
+        return try {
+            val date = inputFormat.parse(this) ?: return this
+            outputFormat.format(date)
+        } catch (e: Exception) {
+            this // если не получилось — возвращаем исходную строку
+        }
     }
 
     fun String.toFormattedDate(): String {
-        val inputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
-        val outputFormat = SimpleDateFormat("dd MMMM, HH:mm", Locale.getDefault())
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("EEEE, dd MMMM", Locale.getDefault())
 
         return try {
             val date = inputFormat.parse(this) ?: return this
@@ -293,17 +281,15 @@ class TodayFragment : Fragment(R.layout.fragment_today) {
     }
 
 
-    private fun updateMainWeatherUI(iconCode: String, temp: Int, feelsLike: Double, windKph: Double, gustKph: Double,
-                                    humidity: Int, pressureMb: Double, precipMm: Double, uv: Double
+    private fun updateMainWeatherUI(iconCode: String, windKph: Double, sunrise: String,
+                                    humidity: Int, sunset: String, precipChance: Int, uv: Double
     ) {
         binding.imageViewMain.loadWeatherIcon(iconCode)
-        binding.tvTempMain.text = "$temp°C"
-        binding.tvFeeling.text = "$feelsLike°C"
-        binding.tvWindSpeed.text = "${windKph.toInt()} км/ч"
-        binding.tvGust.text = "${gustKph.toInt()} км/ч"
+        binding.tvSunrise.text = sunrise.to24HourFormat()
+        binding.tvGust.text = "${windKph.toInt()} км/ч"
         binding.tvHumidity.text = "$humidity%"
-        binding.tvPressure.text = "${pressureMb} мбар"
-        binding.tvRain.text = "$precipMm мм"
+        binding.tvSunset.text = sunset.to24HourFormat()
+        binding.tvRain.text = "$precipChance%"
         binding.tvUV.text = "$uv"
     }
 
@@ -331,28 +317,30 @@ class TodayFragment : Fragment(R.layout.fragment_today) {
         val apiKey = "0f82c0cff9e84ddcb1c92155251005"
 
         for (city in otherCities) {
-            RetrofitClient.apiService.getCurrentWeather(city, apiKey).enqueue(object :
+            RetrofitClient.apiService.getTwoDaysForecast(city, apiKey).enqueue(object :
                 Callback<ForecastResponse> {
                 override fun onResponse(
                     call: Call<ForecastResponse>,
                     response: Response<ForecastResponse>
                 ) {
                     if (response.isSuccessful && response.body() != null) {
-                        val data = response.body()!!
+                        val forecastData = response.body()!!.forecast
+                        val tomorrowDay = forecastData.forecastday.getOrNull(1)
 
-                        val temp = data.current.temp_c.toInt()
-                        val icon = data.current.condition.icon
-                        val windKph = data.current.wind_kph
-                        val humidity = data.current.humidity
-                        val rainMm = "${data.current.precip_mm}" + " мм"
-
-                        otherCityList.add(CityModel(city, temp, icon, windKph, humidity, rainMm))
-                        otherCityAdapter.notifyDataSetChanged()
+                        if (tomorrowDay != null) {
+                            val temp = tomorrowDay.day.maxtemp_c.toInt()
+                            val icon = tomorrowDay.day.condition.icon
+                            val windKph = tomorrowDay.day.maxwind_kph
+                            val humidity = tomorrowDay.day.avghumidity
+                            val rainChance = "${tomorrowDay.day.daily_chance_of_rain}" + "%"
+                            otherCityList.add(CityModel(city, temp, icon, windKph, humidity, rainChance))
+                            otherCityAdapter.notifyDataSetChanged()
+                        }
                     }
                 }
 
                 override fun onFailure(call: Call<ForecastResponse>, t: Throwable) {
-                    Toast.makeText(context, "Ошибка загрузки прогноза других городов", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Ошибка загрузки прогноза для $city", Toast.LENGTH_SHORT).show()
                 }
             })
         }
@@ -362,5 +350,4 @@ class TodayFragment : Fragment(R.layout.fragment_today) {
         super.onDestroyView()
         _binding = null
     }
-
 }

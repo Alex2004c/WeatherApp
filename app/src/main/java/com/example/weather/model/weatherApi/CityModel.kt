@@ -6,5 +6,5 @@ data class CityModel(
     val icon: String,
     val windKph: Double,
     val humidity: Int,
-    val rainMm: Double
+    val rainMm: String
 )
