@@ -47,9 +47,20 @@ class TenDaysFragment : Fragment(R.layout.fragment_ten_days) {
         binding.recyclerView.adapter = dailyAdapter
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+        setupSwipeRefresh()
+
         // Подписываемся на изменение города
         sharedViewModel.mainCity.observe(viewLifecycleOwner) { city ->
             fetchFiveDaysForecast(city)
+        }
+    }
+
+    private fun setupSwipeRefresh() {
+
+        binding.swipeRefresh.setOnRefreshListener {
+            val city = sharedViewModel.mainCity.value ?: "Минск"
+            fetchFiveDaysForecast(city)
+            binding.swipeRefresh.isRefreshing = false
         }
     }
 

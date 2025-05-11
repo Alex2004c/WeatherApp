@@ -105,7 +105,6 @@
                 app:tabIndicatorColor="@color/orange"
                 app:tabIndicatorHeight="3dp"/>
 
-
             <!-- ViewPager2 - контейнер для фрагментов -->
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/viewPager"
@@ -114,6 +113,6 @@
                 android:layout_marginTop="16dp"
                 android:layout_weight="1"
                 android:background="@android:color/transparent" />
-        </LinearLayout>
+    </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

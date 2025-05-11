@@ -51,7 +51,7 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.chip.navigation.bar)
     implementation(libs.xglide)
-
+    implementation (libs.play.services.location)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.glide)

@@ -45,6 +45,17 @@ interface WeatherApiService {
         @Query("lang") lang: String = "ru"
     ): Call<List<Location>>
 
+    @GET("search.json")
+    fun searchCitiesByCoordinates(
+        @Query("key") apiKey: String,
+        @Query("q") lat: Double,
+        @Query("q") lon: Double
+    ): Call<List<Location>>
+
+    @GET("ip.json")
+    fun getLocationByIP(@Query("key") apiKey: String, @Query("q") q: String = "auto:ip"
+    ): Call<LocationResponse>
+
     // Астрономия (восход/закат)
     @GET("astronomy.json")
     fun getAstronomy(

@@ -105,9 +105,25 @@ class TomorrowFragment : Fragment(R.layout.fragment_tomorrow) {
         }
 
         setupAdapters()
+        setupSwipeRefresh()
         fetchTomorrowCityWeather(sharedViewModel.mainCity.value) {
             fetchHourlyForecast(sharedViewModel.mainCity.value)
             fetchOtherCitiesWeather()
+        }
+    }
+
+    private fun setupSwipeRefresh() {
+
+        binding.swipeRefresh.setOnRefreshListener {
+            val city = sharedViewModel.mainCity.value ?: "Минск"
+            fetchTomorrowCityWeather(city) {
+                fetchHourlyForecast(city)
+            }
+            if (city != lastCity) {
+                refreshOtherCityList()
+            }
+            otherCityAdapter.notifyDataSetChanged()
+            binding.swipeRefresh.isRefreshing = false
         }
     }
 

@@ -1,5 +1,8 @@
 package com.example.weather.activity
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -7,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,7 +25,9 @@ import com.example.weather.databinding.FragmentTodayBinding
 import com.example.weather.model.weatherApi.CityModel
 import com.example.weather.model.weatherApi.ForecastResponse
 import com.example.weather.model.weatherApi.Hourly
+import com.example.weather.model.weatherApi.Location
 import com.example.weather.model.weatherApi.RetrofitClient
+import com.google.android.gms.location.LocationServices
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -98,9 +104,25 @@ class TodayFragment : Fragment(R.layout.fragment_today) {
         }
 
         setupAdapters()
+        setupSwipeRefresh()
         fetchCurrentCityWeather(sharedViewModel.mainCity.value) {
             fetchHourlyForecast(sharedViewModel.mainCity.value)
             fetchOtherCitiesWeather()
+        }
+    }
+
+    private fun setupSwipeRefresh() {
+
+        binding.swipeRefresh.setOnRefreshListener {
+            val city = sharedViewModel.mainCity.value ?: "Минск"
+            fetchCurrentCityWeather(city) {
+                fetchHourlyForecast(city)
+            }
+            if (city != lastCity) {
+                refreshOtherCityList()
+            }
+            otherCityAdapter.notifyDataSetChanged()
+            binding.swipeRefresh.isRefreshing = false
         }
     }
 
