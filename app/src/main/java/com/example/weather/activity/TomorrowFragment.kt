@@ -1,6 +1,7 @@
 package com.example.weather.activity
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -24,6 +25,11 @@ import com.example.weather.model.weatherApi.CityModel
 import com.example.weather.model.weatherApi.ForecastResponse
 import com.example.weather.model.weatherApi.Hourly
 import com.example.weather.model.weatherApi.RetrofitClient
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -264,7 +270,7 @@ class TomorrowFragment : Fragment(R.layout.fragment_tomorrow) {
             val date = inputFormat.parse(this) ?: return this
             outputFormat.format(date)
         } catch (e: Exception) {
-            this // если не получилось — возвращаем исходную строку
+            this
         }
     }
 
@@ -316,13 +322,11 @@ class TomorrowFragment : Fragment(R.layout.fragment_tomorrow) {
     private fun fetchOtherCitiesWeather() {
         val apiKey = "0f82c0cff9e84ddcb1c92155251005"
 
-        for (city in otherCities) {
-            RetrofitClient.apiService.getTwoDaysForecast(city, apiKey).enqueue(object :
-                Callback<ForecastResponse> {
-                override fun onResponse(
-                    call: Call<ForecastResponse>,
-                    response: Response<ForecastResponse>
-                ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            for ((index, city) in otherCities.withIndex()) {
+                try {
+                    val response = RetrofitClient.apiService.getTwoDaysForecast(city, apiKey).execute()
+
                     if (response.isSuccessful && response.body() != null) {
                         val forecastData = response.body()!!.forecast
                         val tomorrowDay = forecastData.forecastday.getOrNull(1)
@@ -332,17 +336,63 @@ class TomorrowFragment : Fragment(R.layout.fragment_tomorrow) {
                             val icon = tomorrowDay.day.condition.icon
                             val windKph = tomorrowDay.day.maxwind_kph
                             val humidity = tomorrowDay.day.avghumidity
-                            val rainChance = "${tomorrowDay.day.daily_chance_of_rain}" + "%"
-                            otherCityList.add(CityModel(city, temp, icon, windKph, humidity, rainChance))
-                            otherCityAdapter.notifyDataSetChanged()
+                            val rainChance = "${tomorrowDay.day.daily_chance_of_rain}%"
+
+                            withContext(Dispatchers.Main) {
+                                if (!otherCityList.any { it.name == city }) {
+                                    otherCityList.add(CityModel(city, temp, icon, windKph, humidity, rainChance))
+                                    otherCityAdapter.notifyItemInserted(otherCityList.size - 1)
+                                } else {
+                                    val existingIndex = otherCityList.indexOfFirst { it.name == city }
+                                    otherCityList[existingIndex] = CityModel(city, temp, icon, windKph, humidity, rainChance)
+                                    otherCityAdapter.notifyItemChanged(existingIndex)
+                                }
+                            }
+                        }
+                    }
+                } catch (e: Exception) {
+                    for (attempt in 1..3) {
+                        delay(1000L * attempt)
+                        try {
+                            val retryResponse = RetrofitClient.apiService.getTwoDaysForecast(city, apiKey).execute()
+                            if (retryResponse.isSuccessful && retryResponse.body() != null) {
+                                val forecastData = retryResponse.body()!!.forecast
+                                val tomorrowDay = forecastData.forecastday.getOrNull(1)
+
+                                if (tomorrowDay != null) {
+                                    val temp = tomorrowDay.day.maxtemp_c.toInt()
+                                    val icon = tomorrowDay.day.condition.icon
+                                    val windKph = tomorrowDay.day.maxwind_kph
+                                    val humidity = tomorrowDay.day.avghumidity
+                                    val rainChance = "${tomorrowDay.day.daily_chance_of_rain}%"
+
+                                    withContext(Dispatchers.Main) {
+                                        if (!otherCityList.any { it.name == city }) {
+                                            otherCityList.add(CityModel(city, temp, icon, windKph, humidity, rainChance))
+                                            otherCityAdapter.notifyItemInserted(otherCityList.size - 1)
+                                        } else {
+                                            val existingIndex = otherCityList.indexOfFirst { it.name == city }
+                                            otherCityList[existingIndex] = CityModel(city, temp, icon, windKph, humidity, rainChance)
+                                            otherCityAdapter.notifyItemChanged(existingIndex)
+                                        }
+                                    }
+                                    break
+                                }
+                            }
+                        } catch (e: Exception) {
+                            if (attempt == 3) {
+                                withContext(Dispatchers.Main) {
+                                    Toast.makeText(context, "Ошибка загрузки прогноза для $city", Toast.LENGTH_SHORT).show()
+                                }
+                            }
                         }
                     }
                 }
 
-                override fun onFailure(call: Call<ForecastResponse>, t: Throwable) {
-                    Toast.makeText(context, "Ошибка загрузки прогноза для $city", Toast.LENGTH_SHORT).show()
+                if (index < otherCities.size - 1) {
+                    delay(50L)
                 }
-            })
+            }
         }
     }
 
