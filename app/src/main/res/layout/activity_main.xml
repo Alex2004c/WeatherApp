@@ -32,7 +32,7 @@
         <LinearLayout
             android:id="@+id/linearLayout1"
             android:layout_width="match_parent"
-            android:layout_height="102dp"
+            android:layout_height="90dp"
             android:background="@color/material_dynamic_primary70"
             android:orientation="vertical">
 
@@ -119,8 +119,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginTop="16dp"
-                android:layout_weight="1"
-                android:background="@android:color/system_palette_key_color_primary_dark" />
+                android:layout_weight="1" />
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
