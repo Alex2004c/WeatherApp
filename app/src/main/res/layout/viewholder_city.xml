@@ -3,10 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="220dp"
     android:layout_height="150dp"
-    android:background="@drawable/light_green_bg"
     android:layout_margin="8dp"
-    android:elevation="3dp"
-    >
+    android:background="@color/material_dynamic_primary30"
+    android:elevation="3dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -121,8 +120,8 @@
         android:layout_height="wrap_content"
         android:text="Город"
         android:textColor="@color/white"
-        android:textStyle="bold"
         android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/pic"
         app:layout_constraintStart_toStartOf="@+id/textView7" />
 
@@ -131,11 +130,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="0"
+        android:textColor="@color/white"
         android:textSize="30sp"
         android:textStyle="bold"
-        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/cityTxt"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.363"
         app:layout_constraintStart_toEndOf="@+id/textView7"
-        app:layout_constraintTop_toTopOf="@+id/textView7" />
+        app:layout_constraintTop_toTopOf="@+id/textView7"
+        app:layout_constraintVertical_bias="1.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

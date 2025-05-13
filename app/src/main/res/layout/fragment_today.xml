@@ -17,243 +17,227 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            tools:background="@drawable/bg">
+            tools:background="@android:color/system_accent1_500">
 
             <TextView
                 android:id="@+id/tvCity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:text="Минск"
                 android:textColor="@color/white"
                 android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvTempMain"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                android:layout_marginStart="24dp"
-                android:layout_marginEnd="24dp"
-                android:layout_marginTop="12dp"
-                tools:text="25°C"
-                android:textColor="@color/white"
-                android:textSize="70sp"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Ощущается как"
-                    android:textColor="@color/white"
-                    android:textSize="13sp" />
-
-
-                <TextView
-                    android:id="@+id/tvFeeling"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    tools:text="0°C"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/tvCondition"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:text="Облачно"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:text="Минск" />
 
             <TextView
                 android:id="@+id/tvLastUpdated"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:text="2025-05-10 13:03"
                 android:textColor="@color/white"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:text="2025-05-10 13:03" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="161dp"
                 android:layout_marginStart="24dp"
                 android:layout_marginEnd="24dp">
+
+                <TextView
+                    android:id="@+id/tvTempMain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="70sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.235"
+                    tools:text="25°" />
 
                 <ImageView
                     android:id="@+id/imageViewMain"
                     android:layout_width="130dp"
                     android:layout_height="130dp"
+                    android:layout_marginBottom="16dp"
                     android:contentDescription="@string/mainweatericon"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.992"
+                    app:layout_constraintStart_toEndOf="@+id/tvTempMain"
                     app:srcCompat="@drawable/sunny" />
-                <!-- android:layout_height="0" --><!----><!----><!----><!----><!----><!---->
-                <LinearLayout
-                    android:layout_width="wrap_content"
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/tvCondition"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:text="Облачно" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
+                    android:text="Ощущается как:"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+
+
+                <TextView
+                    android:id="@+id/tvFeeling"
+                    android:layout_width="54dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    tools:text="0°C" />
+
+            </LinearLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="93dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp">
+
+                <!-- android:layout_height="0" --><!----><!----><!----><!----><!----><!---->
+
+                <LinearLayout
+                    android:id="@+id/linearLayout2"
+                    android:layout_width="87dp"
+                    android:layout_height="81dp"
                     android:orientation="vertical"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/imageViewMain"
+                    app:layout_constraintEnd_toStartOf="@+id/linearLayout"
+                    app:layout_constraintStart_toEndOf="@+id/linearLayout1"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="0.1"
-                        android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Осадки"
+                        android:textColor="@color/white"
+                        android:textSize="13sp" />
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Скорость ветра"
-                            android:textColor="@color/white"
-                            android:textSize="13sp" />
+                    <TextView
+                        android:id="@+id/tvRain"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        tools:text="0 мм" />
 
-                        <TextView
-                            android:id="@+id/tvWindSpeed"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            tools:text="12 м/с"
-                            android:textColor="@color/white"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Порывы до"
+                        android:textColor="@color/white"
+                        android:textSize="13sp" />
 
-                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/tvGust"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        tools:text="0 км/ч" />
+                </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="0.1"
-                        android:orientation="vertical">
+                <LinearLayout
+                    android:id="@+id/linearLayout"
+                    android:layout_width="124dp"
+                    android:layout_height="82dp"
+                    android:layout_marginStart="13dp"
+                    android:layout_marginBottom="11dp"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/linearLayout2"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Влажность"
-                            android:textColor="@color/white"
-                            android:textSize="13sp" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Давление"
+                        android:textColor="@color/white"
+                        android:textSize="13sp" />
 
-                        <TextView
-                            android:id="@+id/tvHumidity"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            tools:text="18%"
-                            android:textColor="@color/white"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/tvPressure"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        tools:text="0 мбар" />
 
-                    </LinearLayout>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="УФ-индекс"
+                        android:textColor="@color/white"
+                        android:textSize="13sp" />
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="0.1"
-                        android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/tvUV"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        tools:text="0" />
+                </LinearLayout>
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Осадки"
-                            android:textColor="@color/white"
-                            android:textSize="13sp" />
+                <LinearLayout
+                    android:id="@+id/linearLayout1"
+                    android:layout_width="126dp"
+                    android:layout_height="82dp"
+                    android:orientation="vertical"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                        <TextView
-                            android:id="@+id/tvRain"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            tools:text="0 мм"
-                            android:textColor="@color/white"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Скорость ветра"
+                        android:textColor="@color/white"
+                        android:textSize="13sp" />
 
-                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/tvWindSpeed"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        tools:text="12 м/с" />
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Влажность"
+                        android:textColor="@color/white"
+                        android:textSize="13sp" />
 
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="0.1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Порывы до"
-                            android:textColor="@color/white"
-                            android:textSize="13sp" />
-
-                        <TextView
-                            android:id="@+id/tvGust"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            tools:text="0 км/ч"
-                            android:textColor="@color/white"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/tvHumidity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        tools:text="18%" />
 
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="0.1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Давление"
-                            android:textColor="@color/white"
-                            android:textSize="13sp" />
-
-                        <TextView
-                            android:id="@+id/tvPressure"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            tools:text="0 мбар"
-                            android:textColor="@color/white"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="0.1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="УФ-индекс"
-                            android:textColor="@color/white"
-                            android:textSize="13sp" />
-
-                        <TextView
-                            android:id="@+id/tvUV"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            tools:text="0"
-                            android:textColor="@color/white"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
                 </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -263,20 +247,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
+                android:layout_marginTop="24dp"
                 android:text="Сегодня"
                 android:textColor="@color/white"
                 android:textSize="16sp"
-                android:textStyle="bold"
-                android:layout_marginTop="24dp"/>
+                android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/view1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
+                android:nestedScrollingEnabled="false"
                 android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:nestedScrollingEnabled="false"/>
+                android:paddingEnd="16dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -301,20 +285,21 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16sp"
                     android:layout_marginEnd="24dp"
-                    tools:text="Посмотреть все"
                     android:textColor="@color/white"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    tools:text="Посмотреть все" />
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/view2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
                 android:layout_marginBottom="24dp"
-                android:nestedScrollingEnabled="false"/>
+                android:clipToPadding="false"
+                android:nestedScrollingEnabled="false"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
