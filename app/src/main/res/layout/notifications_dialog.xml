@@ -1,0 +1,86 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/scrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@drawable/dialog_background">
+
+    <!-- Корневой LinearLayout, который является единственным дочерним элементом ScrollView -->
+    <LinearLayout
+        android:id="@+id/itemLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="32dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/weathalert"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/weatheralert"
+                android:contentDescription="Иконка предупреждений"
+                android:layout_marginEnd="16dp" />
+
+            <TextView
+                android:id="@+id/weather_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Предупреждения"
+                android:textSize="24sp"
+                android:textColor="@color/white"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/weather_summary_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/header_background"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="0dp"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/weather_summery"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:lineSpacingExtra="6dp"
+                android:textAlignment="viewStart"
+                android:layout_gravity="start"
+                android:gravity="start"
+                android:layout_marginStart="0dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp" />
+        </LinearLayout>
+
+
+        <!-- Кнопка "ОК" -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp">
+
+            <Button
+                android:id="@+id/okButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="ОК" />
+        </LinearLayout>
+
+    </LinearLayout> <!-- Закрытие LinearLayout -->
+</ScrollView>
