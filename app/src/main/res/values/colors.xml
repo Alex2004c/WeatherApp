@@ -5,5 +5,6 @@
     <color name="green">#083139</color>
     <color name="lightGreen">#2d525a</color>
     <color name="blue">#2196F3</color>
+    <color name="blue10">#6651A0FD</color>
     <color name="orange">#FF5722</color>
 </resources>
