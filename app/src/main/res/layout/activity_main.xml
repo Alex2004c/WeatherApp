@@ -18,7 +18,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/bg" />
+        app:srcCompat="@color/material_dynamic_primary70" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,89 +30,97 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:id="@+id/linearLayout"
+            android:id="@+id/linearLayout1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="102dp"
+            android:background="@color/material_dynamic_primary70"
             android:orientation="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/searchContainer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="46dp"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="37dp"
                 android:layout_marginEnd="24dp"
                 android:background="@drawable/white_full_corner">
 
-                    <EditText
-                        android:id="@+id/editTextText"
-                        android:layout_width="0dp"
-                        android:layout_height="40dp"
-                        android:background="#00000000"
-                        android:drawableStart="@drawable/search_icon"
-                        android:drawablePadding="8dp"
-                        android:ems="10"
-                        android:hint="Город..."
-                        android:cursorVisible="false"
-                        android:inputType="text"
-                        android:padding="8dp"
-                        android:textColor="@color/black"
-                        android:textColorHint="@color/black"
-                        android:textSize="16sp"
-                        android:focusable="true"
-                        android:focusableInTouchMode="true"
-                        android:importantForAutofill="no"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/button"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                <EditText
+                    android:id="@+id/editTextText"
+                    android:layout_width="0dp"
+                    android:layout_height="46dp"
+                    android:background="#00000000"
+                    android:cursorVisible="false"
+                    android:drawableStart="@drawable/search_icon"
+                    android:drawablePadding="8dp"
+                    android:ems="10"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:hint="Город..."
+                    android:importantForAutofill="no"
+                    android:inputType="text"
+                    android:padding="8dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/button"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="1.0" />
 
-                    <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/button"
-                        style="@android:style/Widget.Button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:layout_marginTop="2dp"
-                        android:layout_marginEnd="3dp"
-                        android:layout_marginBottom="2dp"
-                        android:background="@drawable/green_full_corner"
-                        android:text="Поиск"
-                        android:textColor="@color/white"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/button"
+                    style="@android:style/Widget.Button"
+                    android:layout_width="88dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="2dp"
+                    android:background="@color/material_dynamic_primary40"
+                    android:ellipsize="none"
+                    android:text="Поиск"
+                    android:textColor="@color/white"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            tools:visibility="visible">
 
             <!-- TabLayout - вкладки -->
+
+            <!-- ViewPager2 - контейнер для фрагментов -->
+
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginEnd="24dp"
+                android:alpha="1"
                 android:background="@android:color/transparent"
                 app:tabGravity="fill"
+                app:tabIndicator="@android:color/system_control_activated_light"
+                app:tabIndicatorColor="@android:color/system_control_activated_light"
+                app:tabIndicatorHeight="3dp"
                 app:tabMode="fixed"
-                app:tabSelectedTextColor="@color/orange"
-                app:tabTextColor="@color/white"
-                app:tabIndicator="@drawable/tab_indicator"
-                app:tabIndicatorColor="@color/orange"
-                app:tabIndicatorHeight="3dp"/>
+                app:tabSelectedTextColor="@android:color/system_control_activated_light"
+                app:tabTextColor="@color/white" />
 
-            <!-- ViewPager2 - контейнер для фрагментов -->
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/viewPager"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginTop="16dp"
                 android:layout_weight="1"
-                android:background="@android:color/transparent" />
-    </LinearLayout>
+                android:background="@android:color/system_palette_key_color_primary_dark" />
+        </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
